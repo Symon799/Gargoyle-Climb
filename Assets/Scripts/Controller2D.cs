@@ -22,6 +22,7 @@ public class Controller2D : RaycastController
     public void Move(Vector2 moveAmount, bool standingOnPlatform = false)
     {
         Move(moveAmount, Vector2.zero, standingOnPlatform);
+        //animator.SetBool("Moving", (moveAmount.x != 0));
     }
 
     protected void Flip()
@@ -42,7 +43,9 @@ public class Controller2D : RaycastController
         collisions.Reset();
         collisions.moveAmountOld = moveAmount;
         playerInput = input;
-        animator.SetBool("Moving", (playerInput.x != 0));
+
+        if (!standingOnPlatform)
+            animator.SetBool("Moving", (moveAmount.x > 0.01f || moveAmount.x < -0.01f));
 
         if (moveAmount.x != 0)
         {

@@ -14,6 +14,7 @@ public class Player : MonoBehaviour
     public Vector2 wallJumpClimb;
     public Vector2 wallJumpOff;
     public Vector2 wallLeap;
+    public GameObject dashEffect;
 
     private bool canDash = false;
     private bool isFrozen = false;
@@ -66,6 +67,8 @@ public class Player : MonoBehaviour
     public void SetDirectionalInput(Vector2 input)
     {
         directionalInput = input;
+        if (input.x != 0)
+        animator.SetBool("Moving", true);
     }
 
     public void OnJumpInputDown()
@@ -106,11 +109,14 @@ public class Player : MonoBehaviour
         }
     }
 
-        public void OnDashInputUp()
+    public void OnDashInputUp()
     {
         if (isFrozen)
         {
-            Debug.Log("DASH!");
+            float angle = Vector2.Angle(directionalInput, Vector2.right);
+            Quaternion quatAngle = Quaternion.AngleAxis(angle, directionalInput.y < 0 ? Vector3.back : Vector3.forward);
+            GameObject currentDash = Instantiate(dashEffect, transform.position, quatAngle);
+            Destroy(currentDash, 0.5f);
             if (directionalInput.magnitude > 0.01)
                 velocity = directionalInput.normalized * 10;
             else
