@@ -16,6 +16,7 @@ public class Player : MonoBehaviour
     public Vector2 wallLeap;
     public GameObject dashEffect;
     public GameObject auraEffect;
+    private GameObject currentAuraEffect;
 
     private bool canDash = false;
     private bool isFrozen = false;
@@ -159,12 +160,16 @@ public class Player : MonoBehaviour
         isFrozen = true;
         animator.SetBool("Frozen", isFrozen);
         velocity = Vector2.zero;
+
+        currentAuraEffect = Instantiate(auraEffect, transform.position, Quaternion.identity);
     }
 
     public void OnAuraInputUp()
     {
         isFrozen = false;
         animator.SetBool("Frozen", isFrozen);
+
+        Destroy(currentAuraEffect);
     }
 
     private void HandleWallSliding()

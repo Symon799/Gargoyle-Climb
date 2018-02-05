@@ -37,12 +37,12 @@ public class PlayerInput : MonoBehaviour
 
         if (Input.GetButtonDown("Fire3"))
         {
-            //todo
+            player.OnAuraInputDown();
         }
 
         if (Input.GetButtonUp("Fire3"))
         {
-            //todo
+            player.OnAuraInputUp();
         }
     }
 }
