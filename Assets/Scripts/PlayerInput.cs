@@ -10,7 +10,7 @@ public class PlayerInput : MonoBehaviour
         player = GetComponent<Player>();
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         Vector2 directionalInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         player.SetDirectionalInput(directionalInput);
@@ -32,7 +32,6 @@ public class PlayerInput : MonoBehaviour
 
         if (Input.GetButtonUp("Fire1"))
         {
-            Debug.Log("buttonUpFire");
             player.OnDashInputUp();
         }
     }

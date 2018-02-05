@@ -103,9 +103,9 @@ public class Player : MonoBehaviour
         if (canDash && !isDashing)
         {
             isDashing = true;
-            velocity = Vector2.zero;
             isFrozen = true;
             animator.SetBool("Frozen", isFrozen);
+            velocity = Vector2.zero;
         }
     }
 
@@ -113,16 +113,25 @@ public class Player : MonoBehaviour
     {
         if (isFrozen)
         {
-            float angle = Vector2.Angle(directionalInput, Vector2.right);
-            Quaternion quatAngle = Quaternion.AngleAxis(angle, directionalInput.y < 0 ? Vector3.back : Vector3.forward);
-            GameObject currentDash = Instantiate(dashEffect, transform.position, quatAngle);
-            Destroy(currentDash, 0.5f);
             if (directionalInput.magnitude > 0.01)
+            {
+                float angle = Vector2.Angle(directionalInput, Vector2.right);
+                Quaternion quatAngle = Quaternion.AngleAxis(angle, directionalInput.y < 0 ? Vector3.back : Vector3.forward);
+                GameObject currentDash = Instantiate(dashEffect, transform.position, quatAngle);
+                Destroy(currentDash, 0.5f);
+
                 velocity = directionalInput.normalized * 10;
+                canDash = false;
+                StartCoroutine(Dashing());
+            }
             else
-                velocity = Vector2.zero;
-            canDash = false;
-            StartCoroutine(Dashing());
+            {
+                isDashing = false;
+                isFrozen = false;
+                canDash = false;
+                animator.SetBool("Frozen", isFrozen);
+            }
+            
         }
     }
 
