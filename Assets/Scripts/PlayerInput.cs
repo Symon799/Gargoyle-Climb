@@ -34,5 +34,15 @@ public class PlayerInput : MonoBehaviour
         {
             player.OnDashInputUp();
         }
+
+        if (Input.GetButtonDown("Fire3"))
+        {
+            //todo
+        }
+
+        if (Input.GetButtonUp("Fire3"))
+        {
+            //todo
+        }
     }
 }

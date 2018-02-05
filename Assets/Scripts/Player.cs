@@ -15,6 +15,7 @@ public class Player : MonoBehaviour
     public Vector2 wallJumpOff;
     public Vector2 wallLeap;
     public GameObject dashEffect;
+    public GameObject auraEffect;
 
     private bool canDash = false;
     private bool isFrozen = false;
@@ -151,6 +152,19 @@ public class Player : MonoBehaviour
         {
             velocity.y = minJumpVelocity;
         }
+    }
+
+    public void OnAuraInputDown()
+    {
+        isFrozen = true;
+        animator.SetBool("Frozen", isFrozen);
+        velocity = Vector2.zero;
+    }
+
+    public void OnAuraInputUp()
+    {
+        isFrozen = false;
+        animator.SetBool("Frozen", isFrozen);
     }
 
     private void HandleWallSliding()

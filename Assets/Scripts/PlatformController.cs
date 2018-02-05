@@ -21,6 +21,8 @@ public class PlatformController : RaycastController
     private List<PassengerMovement> passengerMovement;
     private Dictionary<Transform, Controller2D> passengerDictionary = new Dictionary<Transform, Controller2D>();
 
+    private bool isFrozen;
+
     public override void Start()
     {
         base.Start();
@@ -30,6 +32,8 @@ public class PlatformController : RaycastController
         {
             globalWaypoints[i] = localWaypoints[i] + transform.position;
         }
+
+        isFrozen = false;
     }
 
     private void Update()
@@ -37,7 +41,7 @@ public class PlatformController : RaycastController
         UpdateRaycastOrigins();
         Vector3 velocity;
 
-        if (Input.GetButton("Fire3"))
+        if (isFrozen)
         {
             Debug.Log("FREEZE!");
             velocity = Vector3.zero;
@@ -226,5 +230,17 @@ public class PlatformController : RaycastController
                 Gizmos.DrawLine(globalWaypointPos - Vector3.left * size, globalWaypointPos + Vector3.left * size);
             }
         }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Aura")
+            isFrozen = true;
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Aura")
+            isFrozen = false;
     }
 }
