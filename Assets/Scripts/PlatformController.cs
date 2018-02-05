@@ -35,8 +35,17 @@ public class PlatformController : RaycastController
     private void Update()
     {
         UpdateRaycastOrigins();
+        Vector3 velocity;
 
-        Vector3 velocity = CalculatePlatformMovement();
+        if (Input.GetButton("Fire3"))
+        {
+            Debug.Log("FREEZE!");
+            velocity = Vector3.zero;
+        }
+        else
+        {
+            velocity = CalculatePlatformMovement();
+        }
 
         CalculatePassengerMovement(velocity);
 
