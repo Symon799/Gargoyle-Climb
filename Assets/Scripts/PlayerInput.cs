@@ -10,7 +10,7 @@ public class PlayerInput : MonoBehaviour
         player = GetComponent<Player>();
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         Vector2 directionalInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         player.SetDirectionalInput(directionalInput);
