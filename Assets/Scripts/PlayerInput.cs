@@ -32,6 +32,7 @@ public class PlayerInput : MonoBehaviour
 
         if (Input.GetButtonUp("Fire1"))
         {
+            Debug.Log("buttonUpFire");
             player.OnDashInputUp();
         }
     }
