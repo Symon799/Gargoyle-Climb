@@ -14,14 +14,17 @@ public class CameraFollow : MonoBehaviour {
     // Update is called once per frame
     void Update ()
     {
-        float x = player.position.x;
-        if (startPos.position.x > x)
-            x = startPos.position.x;
-        
-        float y = player.position.y;
-        if (startPos.position.y > y)
-            y = startPos.position.y;
-        
-        transform.position = new Vector3(x, y, -5);
+        if (player)
+        {
+            float x = player.position.x;
+            if (startPos.position.x > x)
+                x = startPos.position.x;
+
+            float y = player.position.y;
+            if (startPos.position.y > y)
+                y = startPos.position.y;
+
+            transform.position = new Vector3(x, y, -5);
+        }
     }
 }
