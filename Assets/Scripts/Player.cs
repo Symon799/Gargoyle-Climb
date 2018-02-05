@@ -113,7 +113,7 @@ public class Player : MonoBehaviour
 
     public void OnDashInputUp()
     {
-        if (isFrozen)
+        if (isFrozen && isDashing)
         {
             if (directionalInput.magnitude > 0.01)
             {
@@ -158,6 +158,7 @@ public class Player : MonoBehaviour
     public void OnAuraInputDown()
     {
         isFrozen = true;
+        canDash = false;
         animator.SetBool("Frozen", isFrozen);
         velocity = Vector2.zero;
 
@@ -167,6 +168,7 @@ public class Player : MonoBehaviour
     public void OnAuraInputUp()
     {
         isFrozen = false;
+        canDash = true;
         animator.SetBool("Frozen", isFrozen);
 
         Destroy(currentAuraEffect);
@@ -209,9 +211,10 @@ public class Player : MonoBehaviour
     {
         float targetVelocityX = directionalInput.x * moveSpeed;
         if (!isFrozen)
+        {
             velocity.x = Mathf.SmoothDamp(velocity.x, targetVelocityX, ref velocityXSmoothing, (controller.collisions.below ? accelerationTimeGrounded : accelerationTimeAirborne));
-
-        if (!isDashing)
-            velocity.y += gravity * Time.deltaTime;
+            if (!isDashing)
+                velocity.y += gravity * Time.deltaTime;
+        }
     }
 }
