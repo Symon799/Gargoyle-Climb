@@ -21,7 +21,6 @@ public class Death : MonoBehaviour {
     {
         if (collision.gameObject.tag == "Death")
         {
-            Debug.Log("DEATH");
             Destroy(this.gameObject);
             game.setDead();
         }
