@@ -6,7 +6,7 @@ public class Respawn : MonoBehaviour
 {
     public GameObject playerPrefab;
     public Transform startPlayerPos;
-    bool isDead = false;
+    private bool dead = false;
 
     // Use this for initialization
     void Start()
@@ -17,17 +17,22 @@ public class Respawn : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (isDead && Input.GetButtonDown("Reset"))
+        if (dead && Input.GetButtonDown("Reset"))
         {
             Instantiate(playerPrefab, startPlayerPos.position, Quaternion.identity);
-            isDead = false;
+            dead = false;
         }
     }
 
     public void setDead()
     {
-        isDead = true;
+        dead = true;
     }
 
-    
+    public bool isDead()
+    {
+        return dead;
+    }
+
+
 }
