@@ -19,8 +19,11 @@ public class Player : MonoBehaviour
     private GameObject currentAuraEffect;
 
     private bool canDash = false;
+    private bool canEnableAura = false;
     private bool isFrozen = false;
     private bool isDashing = false;
+    private bool wasAuraEnabled = false;
+    private bool wasDashEnabled = false;
 
     public float wallSlideSpeedMax = 3f;
     public float wallStickTime = .25f;
@@ -63,6 +66,7 @@ public class Player : MonoBehaviour
         {
             velocity.y = 0f;
             canDash = true;
+            canEnableAura = true;
         }
     }
 
@@ -97,6 +101,7 @@ public class Player : MonoBehaviour
         {
             velocity.y = maxJumpVelocity;
             canDash = true;
+            canEnableAura = true;
         }
     }
 
@@ -104,6 +109,8 @@ public class Player : MonoBehaviour
     {
         if (canDash && !isDashing)
         {
+            wasAuraEnabled = canEnableAura;
+            canEnableAura = false;
             isDashing = true;
             isFrozen = true;
             animator.SetBool("Frozen", isFrozen);
@@ -115,27 +122,25 @@ public class Player : MonoBehaviour
     {
         if (canDash && isFrozen && isDashing)
         {
+            GameObject currentDash;
             if (directionalInput.magnitude > 0.01)
             {
                 float angle = Vector2.Angle(directionalInput, Vector2.right);
                 Quaternion quatAngle = Quaternion.AngleAxis(angle, directionalInput.y < 0 ? Vector3.back : Vector3.forward);
-                GameObject currentDash = Instantiate(dashEffect, transform.position, quatAngle);
-                Destroy(currentDash, 0.5f);
-
+                currentDash = Instantiate(dashEffect, transform.position, quatAngle);
                 velocity = directionalInput.normalized * 10;
-                canDash = false;
-                StartCoroutine(Dashing());
             }
             else
             {
-                GameObject currentDash = Instantiate(dashEffect, transform.position, Quaternion.AngleAxis(90, Vector3.forward));
+                currentDash = Instantiate(dashEffect, transform.position, Quaternion.AngleAxis(90, Vector3.forward));
                 Destroy(currentDash, 0.5f);
-
                 velocity = Vector2.up * 10;
-                canDash = false;
-                StartCoroutine(Dashing());
             }
-            
+
+            Destroy(currentDash, 0.5f);
+            canDash = false;
+            canEnableAura = wasAuraEnabled;
+            StartCoroutine(Dashing());
         }
     }
 
@@ -159,21 +164,29 @@ public class Player : MonoBehaviour
 
     public void OnAuraInputDown()
     {
-        isFrozen = true;
-        canDash = false;
-        animator.SetBool("Frozen", isFrozen);
-        velocity = Vector2.zero;
+        if (canEnableAura && !isFrozen)
+        {
+            isFrozen = true;
+            wasDashEnabled = canDash;
+            canDash = false;
+            animator.SetBool("Frozen", isFrozen);
+            velocity = Vector2.zero;
 
-        currentAuraEffect = Instantiate(auraEffect, transform.position, Quaternion.identity);
+            currentAuraEffect = Instantiate(auraEffect, transform.position, Quaternion.identity);
+        }
     }
 
     public void OnAuraInputUp()
     {
-        isFrozen = false;
-        canDash = true;
-        animator.SetBool("Frozen", isFrozen);
+        if (isFrozen && canEnableAura)
+        {
+            isFrozen = false;
+            canEnableAura = false;
+            canDash = wasDashEnabled;
+            animator.SetBool("Frozen", isFrozen);
 
-        StartCoroutine(AuraFadeOut());
+            StartCoroutine(AuraFadeOut());
+        }
     }
 
     IEnumerator AuraFadeOut()
