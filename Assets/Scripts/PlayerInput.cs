@@ -35,12 +35,12 @@ public class PlayerInput : MonoBehaviour
             player.OnDashInputUp();
         }
 
-        if (Input.GetButtonDown("Fire3"))
+        if (Input.GetButtonDown("Fire2"))
         {
             player.OnAuraInputDown();
         }
 
-        if (Input.GetButtonUp("Fire3"))
+        if (Input.GetButtonUp("Fire2"))
         {
             player.OnAuraInputUp();
         }

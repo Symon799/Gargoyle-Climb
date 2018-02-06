@@ -185,16 +185,9 @@ public class Player : MonoBehaviour
             canDash = wasDashEnabled;
             animator.SetBool("Frozen", isFrozen);
 
-            StartCoroutine(AuraFadeOut());
+            AuraSizeController auraScript = currentAuraEffect.GetComponent<AuraSizeController>() as AuraSizeController;
+            auraScript.launchFadeOut();
         }
-    }
-
-    IEnumerator AuraFadeOut()
-    {
-        AuraSizeController auraScript = currentAuraEffect.GetComponent<AuraSizeController>() as AuraSizeController;
-        auraScript.launchFadeOut();
-        yield return new WaitForSeconds(0.2f);
-        Destroy(currentAuraEffect);
     }
 
     private void HandleWallSliding()

@@ -25,8 +25,10 @@ public class AuraSizeController : MonoBehaviour {
 
         if (isFadeOut)
         {
-            float t = (Time.time - startTime) / 0.15f;
-            GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, Mathf.SmoothStep(1, 0, t));
+            float step = Mathf.SmoothStep(1, 0, (Time.time - startTime) / 0.15f);
+            GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, step);
+            if (step == 0)
+                Destroy(this.gameObject);
         }
     }
 
