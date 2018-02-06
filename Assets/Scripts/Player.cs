@@ -19,8 +19,11 @@ public class Player : MonoBehaviour
     private GameObject currentAuraEffect;
 
     private bool canDash = false;
+    private bool canEnableAura = false;
     private bool isFrozen = false;
     private bool isDashing = false;
+    private bool wasAuraEnabled = false;
+    private bool wasDashEnabled = false;
 
     public float wallSlideSpeedMax = 3f;
     public float wallStickTime = .25f;
@@ -63,6 +66,7 @@ public class Player : MonoBehaviour
         {
             velocity.y = 0f;
             canDash = true;
+            canEnableAura = true;
         }
     }
 
@@ -97,6 +101,7 @@ public class Player : MonoBehaviour
         {
             velocity.y = maxJumpVelocity;
             canDash = true;
+            canEnableAura = true;
         }
     }
 
@@ -104,6 +109,8 @@ public class Player : MonoBehaviour
     {
         if (canDash && !isDashing)
         {
+            wasAuraEnabled = canEnableAura;
+            canEnableAura = false;
             isDashing = true;
             isFrozen = true;
             animator.SetBool("Frozen", isFrozen);
@@ -124,10 +131,12 @@ public class Player : MonoBehaviour
 
                 velocity = directionalInput.normalized * 10;
                 canDash = false;
+                canEnableAura = wasAuraEnabled;
                 StartCoroutine(Dashing());
             }
             else
             {
+                canEnableAura = wasAuraEnabled;
                 isDashing = false;
                 isFrozen = false;
                 canDash = false;
@@ -157,21 +166,29 @@ public class Player : MonoBehaviour
 
     public void OnAuraInputDown()
     {
-        isFrozen = true;
-        canDash = false;
-        animator.SetBool("Frozen", isFrozen);
-        velocity = Vector2.zero;
+        if (canEnableAura && !isFrozen)
+        {
+            isFrozen = true;
+            wasDashEnabled = canDash;
+            canDash = false;
+            animator.SetBool("Frozen", isFrozen);
+            velocity = Vector2.zero;
 
-        currentAuraEffect = Instantiate(auraEffect, transform.position, Quaternion.identity);
+            currentAuraEffect = Instantiate(auraEffect, transform.position, Quaternion.identity);
+        }
     }
 
     public void OnAuraInputUp()
     {
-        isFrozen = false;
-        canDash = true;
-        animator.SetBool("Frozen", isFrozen);
+        if (isFrozen && canEnableAura)
+        {
+            isFrozen = false;
+            canEnableAura = false;
+            canDash = wasDashEnabled;
+            animator.SetBool("Frozen", isFrozen);
 
-        Destroy(currentAuraEffect);
+            Destroy(currentAuraEffect);
+        }
     }
 
     private void HandleWallSliding()
