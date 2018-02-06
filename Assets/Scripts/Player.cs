@@ -10,6 +10,7 @@ public class Player : MonoBehaviour
     private float accelerationTimeAirborne = .2f;
     private float accelerationTimeGrounded = .1f;
     private float moveSpeed = 4f;
+    private float timeCharged = 0;
 
     public Vector2 wallJumpClimb;
     public Vector2 wallJumpOff;
@@ -115,26 +116,39 @@ public class Player : MonoBehaviour
             isFrozen = true;
             animator.SetBool("Frozen", isFrozen);
             velocity = Vector2.zero;
+            StartCoroutine(timeFreeze());
         }
+    }
+
+    IEnumerator timeFreeze()
+    {
+        timeCharged = Time.time;
+        yield return new WaitForSeconds(1f);
+        
+        if (isFrozen == true)
+            OnDashInputUp();
     }
 
     public void OnDashInputUp()
     {
         if (canDash && isFrozen && isDashing)
         {
+            timeCharged = Time.time - timeCharged + 0.5f;
+            timeCharged = (timeCharged > 1) ? 1 : timeCharged;
+
             GameObject currentDash;
             if (directionalInput.magnitude > 0.01)
             {
                 float angle = Vector2.Angle(directionalInput, Vector2.right);
                 Quaternion quatAngle = Quaternion.AngleAxis(angle, directionalInput.y < 0 ? Vector3.back : Vector3.forward);
                 currentDash = Instantiate(dashEffect, transform.position, quatAngle);
-                velocity = directionalInput.normalized * 10;
+                velocity = directionalInput.normalized * 10 * timeCharged;
             }
             else
             {
                 currentDash = Instantiate(dashEffect, transform.position, Quaternion.AngleAxis(90, Vector3.forward));
                 Destroy(currentDash, 0.5f);
-                velocity = Vector2.up * 10;
+                velocity = Vector2.up * 10 * timeCharged;
             }
 
             Destroy(currentDash, 0.5f);
@@ -152,7 +166,6 @@ public class Player : MonoBehaviour
         animator.SetBool("Frozen", isFrozen);
         velocity = velocity / 1.5f;
     }
-
 
     public void OnJumpInputUp()
     {
