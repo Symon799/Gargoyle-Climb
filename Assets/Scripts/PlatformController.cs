@@ -43,7 +43,6 @@ public class PlatformController : RaycastController
 
         if (isFrozen)
         {
-            Debug.Log("FREEZE!");
             velocity = Vector3.zero;
         }
         else
@@ -235,12 +234,16 @@ public class PlatformController : RaycastController
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Aura")
+        {
             isFrozen = true;
+        }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Aura")
+        {
             isFrozen = false;
+        }
     }
 }

@@ -113,7 +113,7 @@ public class Player : MonoBehaviour
 
     public void OnDashInputUp()
     {
-        if (isFrozen && isDashing)
+        if (canDash && isFrozen && isDashing)
         {
             if (directionalInput.magnitude > 0.01)
             {
@@ -128,10 +128,12 @@ public class Player : MonoBehaviour
             }
             else
             {
-                isDashing = false;
-                isFrozen = false;
+                GameObject currentDash = Instantiate(dashEffect, transform.position, Quaternion.AngleAxis(90, Vector3.forward));
+                Destroy(currentDash, 0.5f);
+
+                velocity = Vector2.up * 10;
                 canDash = false;
-                animator.SetBool("Frozen", isFrozen);
+                StartCoroutine(Dashing());
             }
             
         }
@@ -171,6 +173,14 @@ public class Player : MonoBehaviour
         canDash = true;
         animator.SetBool("Frozen", isFrozen);
 
+        StartCoroutine(AuraFadeOut());
+    }
+
+    IEnumerator AuraFadeOut()
+    {
+        AuraSizeController auraScript = currentAuraEffect.GetComponent<AuraSizeController>() as AuraSizeController;
+        auraScript.launchFadeOut();
+        yield return new WaitForSeconds(0.2f);
         Destroy(currentAuraEffect);
     }
 
