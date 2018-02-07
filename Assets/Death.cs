@@ -5,6 +5,7 @@ using UnityEngine;
 public class Death : MonoBehaviour {
 
     private Respawn game;
+    public GameObject deathParticle;
 
     // Use this for initialization
     void Start()
@@ -21,6 +22,8 @@ public class Death : MonoBehaviour {
     {
         if (collision.gameObject.tag == "Death")
         {
+            GameObject particle = Instantiate(deathParticle, transform.position, Quaternion.identity);
+            Destroy(particle, 1.0f);
             Destroy(this.gameObject);
             game.setDead();
         }

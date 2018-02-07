@@ -6,12 +6,15 @@ public class Respawn : MonoBehaviour
 {
     public GameObject playerPrefab;
     public Transform startPlayerPos;
+    public GameObject gameOver;
     private bool dead = false;
 
     // Use this for initialization
     void Start()
     {
         Instantiate(playerPrefab, startPlayerPos.position, Quaternion.identity);
+        gameOver.SetActive(false);
+
     }
 
     // Update is called once per frame
@@ -20,6 +23,7 @@ public class Respawn : MonoBehaviour
         if (dead && Input.GetButtonDown("Reset"))
         {
             Instantiate(playerPrefab, startPlayerPos.position, Quaternion.identity);
+            gameOver.SetActive(false);
             dead = false;
         }
     }
@@ -27,6 +31,7 @@ public class Respawn : MonoBehaviour
     public void setDead()
     {
         dead = true;
+        gameOver.SetActive(true);
     }
 
     public bool isDead()

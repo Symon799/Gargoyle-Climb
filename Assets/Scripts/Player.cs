@@ -123,17 +123,16 @@ public class Player : MonoBehaviour
     IEnumerator timeFreeze()
     {
         timeCharged = Time.time;
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.8f);
         
-        if (isFrozen == true)
-            OnDashInputUp();
+        OnDashInputUp();
     }
 
     public void OnDashInputUp()
     {
         if (canDash && isFrozen && isDashing)
         {
-            timeCharged = Time.time - timeCharged + 0.5f;
+            timeCharged = Time.time - timeCharged + 0.4f;
             timeCharged = (timeCharged > 1) ? 1 : timeCharged;
 
             GameObject currentDash;
