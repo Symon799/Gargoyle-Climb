@@ -80,3 +80,5 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 ProjectSettings/ProjectVersion.txt
+.vs/Gargoyle-Climb/v15/Server/sqlite3/storage.ide
+ProjectSettings/ProjectVersion.txt
