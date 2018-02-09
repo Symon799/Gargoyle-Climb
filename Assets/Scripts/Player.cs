@@ -42,6 +42,14 @@ public class Player : MonoBehaviour
     private Vector2 directionalInput;
     private bool wallSliding;
     private int wallDirX;
+    private bool moving = false;
+
+    AudioSource music;
+    AudioSource step;
+    AudioSource jump;
+    AudioSource jumpland;
+    AudioSource dash;
+    float scaleStep = Mathf.Pow(2f, 1.0f / 12f);
 
     private void Start()
     {
@@ -50,6 +58,26 @@ public class Player : MonoBehaviour
         gravity = -(2 * maxJumpHeight) / Mathf.Pow(timeToJumpApex, 2);
         maxJumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
         minJumpVelocity = Mathf.Sqrt(2 * Mathf.Abs(gravity) * minJumpHeight);
+
+        AudioSource[] audios = GetComponents<AudioSource>();
+        step = audios[0];
+        jump = audios[1];
+        jumpland = audios[2];
+        dash = audios[3];
+        StartCoroutine(PlayStep());
+    }
+
+    IEnumerator PlayStep()
+    {
+        while (true)
+        {
+            if (moving)
+            {
+                step.pitch = Random.Range(1.1f, 0.9f);
+                step.Play();
+            }
+            yield return new WaitForSeconds(0.3f);
+        }
     }
 
     private void Update()
@@ -69,6 +97,7 @@ public class Player : MonoBehaviour
             canDash = true;
             canEnableAura = true;
         }
+        moving = animator.GetBool("Moving");
     }
 
     public void SetDirectionalInput(Vector2 input)
@@ -97,16 +126,26 @@ public class Player : MonoBehaviour
                 velocity.x = -wallDirX * wallLeap.x;
                 velocity.y = wallLeap.y;
             }
+            jump.Play();
         }
         if (controller.collisions.below)
         {
+            jump.Play();
             velocity.y = maxJumpVelocity;
             canDash = true;
             canEnableAura = true;
+            StartCoroutine(PlayLand());
         }
     }
 
-    public void OnDashInputDown()
+    IEnumerator PlayLand()
+    {
+        yield return new WaitForSeconds(0.5f);
+        yield return new WaitUntil(() => controller.collisions.below == true);
+        jumpland.Play();
+    }
+
+        public void OnDashInputDown()
     {
         if (canDash && !isDashing)
         {
@@ -138,6 +177,7 @@ public class Player : MonoBehaviour
             GameObject currentDash;
             if (directionalInput.magnitude > 0.01)
             {
+                dash.Play();
                 float angle = Vector2.Angle(directionalInput, Vector2.right);
                 Quaternion quatAngle = Quaternion.AngleAxis(angle, directionalInput.y < 0 ? Vector3.back : Vector3.forward);
                 currentDash = Instantiate(dashEffect, transform.position, quatAngle);
