@@ -11,6 +11,8 @@ public class Respawn : MonoBehaviour
     private bool dead = false;
     AudioSource death;
     public int nbDeath;
+    public int nbCoin;
+    public Text nbCoinText;
     public Text nbDeathText;
 
     // Use this for initialization
@@ -20,12 +22,14 @@ public class Respawn : MonoBehaviour
         Instantiate(playerPrefab, startPlayerPos.position, Quaternion.identity);
         gameOver.SetActive(false);
         nbDeathText.text = nbDeath.ToString();
+        nbCoinText.text = nbCoin.ToString();
     }
 
     // Update is called once per frame
     void Update()
     {
         nbDeathText.text = nbDeath.ToString();
+        nbCoinText.text = nbCoin.ToString();
         if (dead && Input.GetButtonDown("Reset"))
         {
             Instantiate(playerPrefab, startPlayerPos.position, Quaternion.identity);
