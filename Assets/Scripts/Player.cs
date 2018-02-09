@@ -43,16 +43,19 @@ public class Player : MonoBehaviour
     private bool wallSliding;
     private int wallDirX;
     private bool moving = false;
+    private Respawn game;
 
     AudioSource music;
     AudioSource step;
     AudioSource jump;
     AudioSource jumpland;
     AudioSource dash;
+
     float scaleStep = Mathf.Pow(2f, 1.0f / 12f);
 
     private void Start()
     {
+        music = GameObject.FindGameObjectWithTag("Game").GetComponent<AudioSource>();
         controller = GetComponent<Controller2D>();
         animator = GetComponent<Animator>();
         gravity = -(2 * maxJumpHeight) / Mathf.Pow(timeToJumpApex, 2);
@@ -225,6 +228,7 @@ public class Player : MonoBehaviour
             velocity = Vector2.zero;
 
             currentAuraEffect = Instantiate(auraEffect, transform.position, Quaternion.identity);
+            music.pitch = 0.6f;
         }
     }
 
@@ -239,6 +243,8 @@ public class Player : MonoBehaviour
 
             AuraSizeController auraScript = currentAuraEffect.GetComponent<AuraSizeController>() as AuraSizeController;
             auraScript.launchFadeOut();
+            music.pitch = 1f;
+
         }
     }
 
