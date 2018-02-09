@@ -10,18 +10,14 @@ public class Coin : MonoBehaviour {
     void Start () {
         game = GameObject.FindGameObjectWithTag("Game").GetComponent<Respawn>() as Respawn;
     }
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Coin")
         {
             game.nbCoin++;
-            Destroy(gameObject);
+            Destroy(collision.gameObject);
         }
     }
 }
