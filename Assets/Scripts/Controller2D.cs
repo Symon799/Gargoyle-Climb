@@ -3,6 +3,8 @@
 public class Controller2D : RaycastController
 {
     public float fallingThroughPlatformResetTimer = 0.1f;
+    public bool movingOnGround = false;
+
     private float maxClimbAngle = 80f;
     private float maxDescendAngle = 80f;
     private bool isFacingRight = true;
@@ -22,7 +24,6 @@ public class Controller2D : RaycastController
     public void Move(Vector2 moveAmount, bool standingOnPlatform = false)
     {
         Move(moveAmount, Vector2.zero, standingOnPlatform);
-        //animator.SetBool("Moving", (moveAmount.x != 0));
     }
 
     protected void Flip()
@@ -32,9 +33,6 @@ public class Controller2D : RaycastController
         Vector3 theScale = transform.localScale;
         theScale.x *= -1;
         transform.localScale = theScale;
-
-        // Flip collider over the x-axis
-        //center.x = -center.x;
     }
 
     public void Move(Vector2 moveAmount, Vector2 input, bool standingOnPlatform = false)
@@ -43,9 +41,6 @@ public class Controller2D : RaycastController
         collisions.Reset();
         collisions.moveAmountOld = moveAmount;
         playerInput = input;
-
-        if (!standingOnPlatform)
-            animator.SetBool("Moving", (moveAmount.x > 0.01f || moveAmount.x < -0.01f));
 
         if (moveAmount.x != 0)
         {
@@ -71,6 +66,12 @@ public class Controller2D : RaycastController
         if (standingOnPlatform)
         {
             collisions.below = true;
+        }
+
+        if (!standingOnPlatform)
+        {
+            movingOnGround = (moveAmount.x > 0.01f || moveAmount.x < -0.01f) && collisions.below;
+            animator.SetBool("Moving", movingOnGround);
         }
     }
 

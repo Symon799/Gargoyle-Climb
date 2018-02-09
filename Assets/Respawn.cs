@@ -8,10 +8,12 @@ public class Respawn : MonoBehaviour
     public Transform startPlayerPos;
     public GameObject gameOver;
     private bool dead = false;
+    AudioSource death;
 
     // Use this for initialization
     void Start()
     {
+        death = GetComponents<AudioSource>()[1];
         Instantiate(playerPrefab, startPlayerPos.position, Quaternion.identity);
         gameOver.SetActive(false);
 
@@ -31,7 +33,9 @@ public class Respawn : MonoBehaviour
     public void setDead()
     {
         dead = true;
+        death.Play();
         gameOver.SetActive(true);
+
     }
 
     public bool isDead()
