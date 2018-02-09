@@ -36,10 +36,11 @@ public class Respawn : MonoBehaviour
 
     public void setDead()
     {
+        if (!dead)
+            nbDeath++;
         dead = true;
         death.Play();
         gameOver.SetActive(true);
-        nbDeath++;
     }
 
     public bool isDead()
