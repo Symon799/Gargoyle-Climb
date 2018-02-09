@@ -16,6 +16,8 @@ public class Coin : MonoBehaviour {
     {
         if (collision.gameObject.tag == "Coin")
         {
+            AudioSource[] audios = GetComponents<AudioSource>();
+            audios[4].Play();
             game.nbCoin++;
             Destroy(collision.gameObject);
         }
