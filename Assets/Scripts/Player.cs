@@ -148,7 +148,7 @@ public class Player : MonoBehaviour
         jumpland.Play();
     }
 
-        public void OnDashInputDown()
+    public void OnDashInputDown()
     {
         if (canDash && !isDashing)
         {
