@@ -18,6 +18,7 @@ public class Respawn : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        Cursor.visible = false;
         death = GetComponents<AudioSource>()[1];
         Instantiate(playerPrefab, startPlayerPos.position, Quaternion.identity);
         gameOver.SetActive(false);
